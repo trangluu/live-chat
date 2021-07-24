@@ -9,6 +9,7 @@
 
 <script>
 import { reactive } from 'vue'
+import { VueCookieNext } from 'vue-cookie-next'
 import useLogin from '../composables/useLogin'
 
 export default {
@@ -18,11 +19,14 @@ export default {
       password: ''
     })
 
-    const { error, login  } = useLogin()
+    const { error, login } = useLogin()
 
     const handleSubmit = async () => {
-      await login(state.email, state.password)
+      const user = await login(state.email, state.password)
       if (!error.value) {
+        const accessToken = 'bearer' + user.user.refreshToken
+        VueCookieNext.setCookie('accessToken', accessToken)
+        
         context.emit('login')
       }
     }

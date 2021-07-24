@@ -10,6 +10,7 @@
 
 <script>
 import { reactive, ref } from 'vue'
+import { VueCookieNext } from 'vue-cookie-next'
 import useSignup from '../composables/useSignup'
 
 export default {
@@ -23,8 +24,11 @@ export default {
     })
 
     const handleSubmit = async () => {
-      await signup(state.email, state.password, state.displayName)
+      const user = await signup(state.email, state.password, state.displayName)
       if (!error.value) {
+        const accessToken = 'bearer' + user.user.refreshToken
+        VueCookieNext.setCookie('accessToken', accessToken)
+
         context.emit('signup')
       }
     }
