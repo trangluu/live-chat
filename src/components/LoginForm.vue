@@ -12,7 +12,7 @@ import { reactive } from 'vue'
 import useLogin from '../composables/useLogin'
 
 export default {
-  setup() {
+  setup(props, context) {
     const state = reactive({
       email: '',
       password: ''
@@ -23,7 +23,7 @@ export default {
     const handleSubmit = async () => {
       await login(state.email, state.password)
       if (!error.value) {
-        console.log('user logged in')
+        context.emit('login')
       }
     }
 
